@@ -18,14 +18,35 @@ jobs:
 
     - name: Compile and Run Unit Tests
       run: |
-        mvn clean test
+        javac -cp src:lib/junit-platform-console-standalone.jar -d . src/simplejavacalculatorTest/*.java
+        java -cp .:src:lib/junit-platform-console-standalone.jar org.junit.platform.console.ConsoleLauncher --select-class simplejavacalculatorTest.CalculatorTest
 
-    - name: Measure Code Coverage
+    - name: Compile Main Code
       run: |
-        mvn jacoco:report
+        javac src/simplejavacalculator/*.java
 
-    - name: Upload Code Coverage Results
-      uses: actions/upload-artifact@v2
-      with:
-        name: code-coverage-report
-        path: target/site/jacoco/index.html
+    - name: Run SimpleJavaCalculator
+      run: |
+        java -cp src simplejavacalculator.SimpleJavaCalculator
+
+    # Add a step to extract JaCoCo code coverage percentage
+    - name: Extract JaCoCo Coverage
+      id: jacoco_coverage
+      run: |
+        # Replace 'target/jacoco/jacoco.xml' with the actual path to your JaCoCo XML report
+        coverage_percentage=$(xmllint --xpath "string(//report/counter[@type='INSTRUCTION']/@covered)" target/site/jacoco/jacoco.xml)
+        echo "::set-output name=coverage::$coverage_percentage"
+      shell: bash
+
+    - name: Check JaCoCo Coverage
+      run: |
+        # Retrieve the code coverage percentage from the previous step's output
+        coverage_percentage="${{ steps.jacoco_coverage.outputs.coverage }}"
+        
+        # Replace '80' with the desired minimum code coverage percentage
+        if [[ $coverage_percentage -lt 80 ]]; then
+          echo "Code coverage is below the required threshold (80%)."
+          exit 1
+        else
+          echo "Code coverage is acceptable (${coverage_percentage}%)."
+        fi
