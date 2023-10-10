@@ -18,7 +18,8 @@ jobs:
 
     - name: Download JUnit Console Launcher
       run: |
-        wget -O junit-platform-console-standalone.jar https://repo.maven.apache.org/maven2/org/junit/platform/junit-platform-console-standalone/1.8.3/junit-platform-console-standalone-1.8.3.jar
+        latest_version=$(curl -s https://api.github.com/repos/junit-team/junit5/releases/latest | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
+        wget -O junit-platform-console-standalone.jar "https://repo.maven.apache.org/maven2/org/junit/platform/junit-platform-console-standalone/${latest_version}/junit-platform-console-standalone-${latest_version}.jar"
       shell: bash
 
     - name: Compile and Run Unit Tests
