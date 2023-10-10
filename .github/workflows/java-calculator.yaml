@@ -14,6 +14,7 @@ jobs:
       uses: actions/setup-java@v2  # This step sets up Java on the runner
       with:
         java-version: '11'  # Replace with your desired Java version (e.g., '8', '11', '16', etc.)
+        distribution: 'adopt'  # Specify the Java distribution (e.g., 'adopt', 'adopt@1.8', 'adopt@11', etc.)
 
     - name: Compile Java Calculator
       run: |
