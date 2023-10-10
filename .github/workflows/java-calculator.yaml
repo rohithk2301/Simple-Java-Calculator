@@ -16,9 +16,15 @@ jobs:
         java-version: '11'  # Replace with your desired Java version (e.g., '8', '11', '16', etc.)
         distribution: 'adopt'  # Specify the Java distribution
 
-    - name: Compile Java files
+    - name: Compile and Run Unit Tests
       run: |
-        javac src/simplejavacalculator/*.java  # Compile all .java files in the src/simplejavacalculator directory
+        javac -cp src:src/simplejavacalculatorTest -d . src/simplejavacalculatorTest/*.java  # Compile unit test classes
+        java -cp .:src:src/simplejavacalculatorTest org.junit.runner.JUnitCore simplejavacalculatorTest.CalculatorTest
+        # Use your actual test package and class name
+
+    - name: Compile Main Code
+      run: |
+        javac src/simplejavacalculator/*.java  # Compile main code
 
     - name: Run SimpleJavaCalculator
       run: |
