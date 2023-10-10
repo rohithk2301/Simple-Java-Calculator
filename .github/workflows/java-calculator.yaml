@@ -24,12 +24,3 @@ jobs:
       run: |
         echo "Main-Class: YourMainClass" > MANIFEST.MF
         # Replace 'YourMainClass' with the actual name of your main class
-
-    - name: Update JAR File
-      run: |
-        jar ufm SimpleJavaCalculator.jar MANIFEST.MF
-        # Update the JAR file with the new manifest file
-
-    - name: Run Java Calculator
-      run: |
-        java -jar SimpleJavaCalculator.jar
