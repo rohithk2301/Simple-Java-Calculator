@@ -16,15 +16,10 @@ jobs:
         java-version: '11'  # Replace with your desired Java version (e.g., '8', '11', '16', etc.)
         distribution: 'adopt'  # Specify the Java distribution
 
-    - name: Download JUnit Console Launcher
-      run: |
-        wget -O junit-platform-console-standalone.jar "https://repo.maven.apache.org/maven2/org/junit/platform/junit-platform-console-standalone/1.8.3/junit-platform-console-standalone-1.8.3.jar"
-      shell: bash
-
     - name: Compile and Run Unit Tests
       run: |
-        javac -cp src:junit-platform-console-standalone.jar -d . src/simplejavacalculatorTest/*.java  # Compile unit test classes
-        java -cp .:src:junit-platform-console-standalone.jar org.junit.platform.console.ConsoleLauncher --select-class simplejavacalculatorTest.CalculatorTest
+        javac -cp src:lib/junit-platform-console-standalone.jar -d . src/simplejavacalculatorTest/*.java  # Compile unit test classes
+        java -cp .:src:lib/junit-platform-console-standalone.jar org.junit.platform.console.ConsoleLauncher --select-class simplejavacalculatorTest.CalculatorTest
 
     - name: Compile Main Code
       run: |
