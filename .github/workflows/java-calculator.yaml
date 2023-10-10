@@ -16,7 +16,14 @@ jobs:
         java-version: '11'  # Replace with your desired Java version (e.g., '8', '11', '16', etc.)
         distribution: 'adopt'  # Specify the Java distribution
 
-    - name: Compile and Run SimpleJavaCalculator
+    - name: Compile UI class
       run: |
-        javac src/simplejavacalculator/SimpleJavaCalculator.java  # Compile the Java file
+        javac src/simplejavacalculator/UI.java  # Compile the UI class
+
+    - name: Compile SimpleJavaCalculator class
+      run: |
+        javac src/simplejavacalculator/SimpleJavaCalculator.java  # Compile the SimpleJavaCalculator class
+
+    - name: Run SimpleJavaCalculator
+      run: |
         java -cp src simplejavacalculator.SimpleJavaCalculator  # Run the Java program
