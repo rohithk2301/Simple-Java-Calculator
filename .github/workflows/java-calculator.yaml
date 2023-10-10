@@ -1,30 +1,31 @@
 name: Java Calculator CI
 
-on: [push]  # Trigger the workflow on pushes to the repository
+on: [push]
 
 jobs:
   build:
-    runs-on: ubuntu-latest  # You can choose a different runner if needed
+    runs-on: ubuntu-latest
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v2  # This step checks out your repository's code
+      uses: actions/checkout@v2
 
     - name: Set up Java
-      uses: actions/setup-java@v2  # This step sets up Java on the runner
+      uses: actions/setup-java@v2
       with:
-        java-version: '11'  # Replace with your desired Java version (e.g., '8', '11', '16', etc.)
-        distribution: 'adopt'  # Specify the Java distribution
+        java-version: '11'
+        distribution: 'adopt'
 
     - name: Compile and Run Unit Tests
       run: |
-        javac -cp src:lib/junit-platform-console-standalone.jar -d . src/simplejavacalculatorTest/*.java  # Compile unit test classes
-        java -cp .:src:lib/junit-platform-console-standalone.jar org.junit.platform.console.ConsoleLauncher --select-class simplejavacalculatorTest.CalculatorTest
+        mvn clean test
 
-    - name: Compile Main Code
+    - name: Measure Code Coverage
       run: |
-        javac src/simplejavacalculator/*.java  # Compile main code
+        mvn jacoco:report
 
-    - name: Run SimpleJavaCalculator
-      run: |
-        java -cp src simplejavacalculator.SimpleJavaCalculator  # Run the Java program
+    - name: Upload Code Coverage Results
+      uses: actions/upload-artifact@v2
+      with:
+        name: code-coverage-report
+        path: target/site/jacoco/index.html
