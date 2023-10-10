@@ -16,11 +16,16 @@ jobs:
         java-version: '11'  # Replace with your desired Java version (e.g., '8', '11', '16', etc.)
         distribution: 'adopt'  # Specify the Java distribution
 
+    - name: Install JUnit
+      run: |
+        curl -L -o junit-platform-console-standalone.jar https://repo.maven.apache.org/maven2/org/junit/platform/junit-platform-console-standalone/1.7.3/junit-platform-console-standalone-1.7.3.jar
+        mkdir -p lib
+        mv junit-platform-console-standalone.jar lib/
+
     - name: Compile and Run Unit Tests
       run: |
-        javac -cp src:src/simplejavacalculatorTest -d . src/simplejavacalculatorTest/*.java  # Compile unit test classes
-        java -cp .:src:src/simplejavacalculatorTest org.junit.runner.JUnitCore simplejavacalculatorTest.CalculatorTest
-        # Use your actual test package and class name
+        javac -cp src:lib/junit-platform-console-standalone.jar -d . src/simplejavacalculatorTest/*.java  # Compile unit test classes
+        java -cp .:src:lib/junit-platform-console-standalone.jar org.junit.platform.console.ConsoleLauncher --select-class simplejavacalculatorTest.CalculatorTest
 
     - name: Compile Main Code
       run: |
