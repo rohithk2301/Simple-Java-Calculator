@@ -24,3 +24,17 @@ jobs:
       run: |
         echo "Main-Class: YourMainClass" > MANIFEST.MF
         # Replace 'YourMainClass' with the actual name of your main class
+
+    - name: Check JAR File
+      run: |
+        ls -l src/simplejavacalculator/
+        # Check the contents of the src/simplejavacalculator/ directory
+
+    - name: Update JAR File
+      run: |
+        jar ufm SimpleJavaCalculator.jar MANIFEST.MF
+        # Update the JAR file with the new manifest file
+
+    - name: Run Java Calculator
+      run: |
+        java -jar SimpleJavaCalculator.jar
