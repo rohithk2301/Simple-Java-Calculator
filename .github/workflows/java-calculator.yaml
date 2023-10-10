@@ -13,9 +13,17 @@ jobs:
     - name: Set up Java
       uses: actions/setup-java@v2  # This step sets up Java on the runner
       with:
-        java-version: '11'  # You can specify the Java version you need
+        java-version: '11'  # Replace with your desired Java version (e.g., '8', '11', '16', etc.)
 
-    - name: Compile and Run
+    - name: Compile Java Calculator
       run: |
-        javac Calculator.java  # Replace with the actual filename of your Java program
-        java Calculator  # Replace with the name of your Java class that contains the main method
+        javac src/simplejavacalculator/*.java  # Compile all .java files in the src/simplejavacalculator directory
+
+    - name: Create JAR File
+      run: |
+        jar cf SimpleJavaCalculator.jar -C src/simplejavacalculator .
+        # The '.' at the end specifies the source directory for the JAR file
+
+    - name: Run Java Calculator
+      run: |
+        java -jar SimpleJavaCalculator.jar
