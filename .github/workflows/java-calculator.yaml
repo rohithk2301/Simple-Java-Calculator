@@ -1,0 +1,21 @@
+name: Java Calculator CI
+
+on: [push]  # Trigger the workflow on pushes to the repository
+
+jobs:
+  build:
+    runs-on: ubuntu-latest  # You can choose a different runner if needed
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2  # This step checks out your repository's code
+
+    - name: Set up Java
+      uses: actions/setup-java@v2  # This step sets up Java on the runner
+      with:
+        java-version: '11'  # You can specify the Java version you need
+
+    - name: Compile and Run
+      run: |
+        javac Calculator.java  # Replace with the actual filename of your Java program
+        java Calculator  # Replace with the name of your Java class that contains the main method
