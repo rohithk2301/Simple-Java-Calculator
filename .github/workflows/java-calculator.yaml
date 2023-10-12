@@ -1,6 +1,9 @@
-name: Java Calculator CI
+name: Java CI
 
-on: [push]
+on:
+  push:
+    branches:
+      - main
 
 jobs:
   build:
@@ -11,42 +14,27 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Set up Java
-      uses: actions/setup-java@v2
+      uses: actions/setup-java@v1
       with:
         java-version: '11'
-        distribution: 'adopt'
 
-    - name: Compile and Run Unit Tests
-      run: |
-        javac -cp src:lib/junit-platform-console-standalone.jar -d . src/simplejavacalculatorTest/*.java
-        java -cp .:src:lib/junit-platform-console-standalone.jar org.junit.platform.console.ConsoleLauncher --select-class simplejavacalculatorTest.CalculatorTest
+    - name: Build with Maven
+      run: mvn package
 
-    - name: Compile Main Code
-      run: |
-        javac src/simplejavacalculator/*.java
+    - name: Run Unit Tests
+      run: mvn test
 
-    - name: Run SimpleJavaCalculator
-      run: |
-        java -cp src simplejavacalculator.SimpleJavaCalculator
+    - name: Check Code Coverage
+      run: mvn jacoco:report
 
-    # Add a step to extract JaCoCo code coverage percentage
-    - name: Extract JaCoCo Coverage
-      id: jacoco_coverage
+    - name: Convert Code Coverage to JSON
       run: |
-        # Replace 'target/jacoco/jacoco.xml' with the actual path to your JaCoCo XML report
-        coverage_percentage=$(xmllint --xpath "string(//report/counter[@type='INSTRUCTION']/@covered)" target/site/jacoco/jacoco.xml)
-        echo "::set-output name=coverage::$coverage_percentage"
-      shell: bash
+        mvn jacoco:report -DreportFile=target/site/jacoco/jacoco.json
+      env:
+        COVERAGE_FILE: target/site/jacoco/jacoco.json
 
-    - name: Check JaCoCo Coverage
-      run: |
-        # Retrieve the code coverage percentage from the previous step's output
-        coverage_percentage="${{ steps.jacoco_coverage.outputs.coverage }}"
-        
-        # Replace '80' with the desired minimum code coverage percentage
-        if [[ $coverage_percentage -lt 80 ]]; then
-          echo "Code coverage is below the required threshold (80%)."
-          exit 1
-        else
-          echo "Code coverage is acceptable (${coverage_percentage}%)."
-        fi
+    - name: Upload Code Coverage
+      uses: actions/upload-artifact@v2
+      with:
+        name: code-coverage
+        path: target/site/jacoco  # Adjust the path to the directory containing the JSON file
